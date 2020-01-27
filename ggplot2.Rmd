@@ -1,0 +1,32 @@
+---
+title: "Creating graphs with ggplot"
+author: "Mies Casey"
+date: "1/27/2020"
+output: html_document
+---
+# Plots with ggplot2
+
+We are going to make plots in R using the ggplot2 packages from the tidyverse.
+
+-tidyverse: suite of packages for wrangling & viz ( ggplot2)
+-readxl: to read in excel files
+- here: to help with filepaths
+```{r}
+install.packages("tidyverse")
+```
+
+
+
+```{r setup, message=FALSE} 
+library(tidyverse) # install.packages ("tidyverse")
+library(readxl) # install.packages ("readxl")
+library(here) # install.packages ("here")
+```
+
+# California National Parks Data
+
+```{r read-data}
+
+ca_np <- read_csv(here("data/ca_np.csv"))
+```
+
