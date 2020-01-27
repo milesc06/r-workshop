@@ -25,8 +25,9 @@ library(here) # install.packages ("here")
 
 # California National Parks Data
 
-```{r read-data}
+```{r, message = FALSE}
 
 ca_np <- read_csv(here("data/ca_np.csv"))
+ci_np <- read_xlsx(here("data/ci_np.xlsx"))
 ```
 
