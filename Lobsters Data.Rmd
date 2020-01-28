@@ -1,0 +1,85 @@
+---
+title: "Lobster Data"
+author: "Miles Casey"
+date: "1/27/2020"
+output: html_document
+---
+
+```{r}
+library(tidyverse) #install.packages("tidyverse")
+library(readxl)
+library(here)
+#install.packages("skimr")
+library(skimr) # install.packages("skimr")
+#install.packages("kableExtra")
+library(kableExtra) # install.packages("kableExtra)
+
+# read in lobster data
+lobsters <- Lobsters <- read_xlsx(here("data", "lobsters.xlsx"),
+                                        skip = 4)
+```
+
+Viewing our data with skimr
+
+```{r}
+skimr::skim(lobsters) #explicitly stated from skimr
+skim(lobsters)
+```
+
+# Pivot Tables
+In R, Pivot tables are : `group_by() %>% summarize()`
+cmd + shift + m
+letter "n" will count observations
+? + function brings up help menu
+```{r}
+# group by year
+lobsters %>%
+  group_by(year) %>% 
+  summarize(count_by_year = n())
+
+# group by year and site
+lobsters %>%
+  group_by(year,site) %>% 
+  summarize(count_by_year_site = n())
+
+# group by site and year
+lobsters %>%
+  group_by(site, year) %>% 
+  summarize(count_by_site_year = n())
+```
+
+Summarize by multiple variables
+na.rm removes all data sets that were missed or left out to make sure there are no blank values
+assigning to an object allows for easily re-using code you already have written
+```{r}
+siteyear_summary <- lobsters %>%
+  group_by(site, year) %>% 
+  summarize(count_by_site_year = n(),
+            mean_size_mm = mean(size_mm, na.rm = TRUE), 
+            sd_size_mm = sd(size_mm, na.rm = TRUE))
+```
+
+Table formatting with `kableExtra::kable()`
+```{r}
+siteyear_summary %>% 
+  kable()
+```
+
+There are `r nrow(lobsters)` total lobsters included in this report.
+
+## Activity
+1. Build from our analyses: calculate the median lobster size for each site and year (hint: `size_mm` and a function called `median()`
+2. Sync this to github
+
+```{r}
+siteyear_summary <- lobsters %>%
+  group_by(site, year) %>% 
+  summarize(count_by_site_year = n(),
+            median_size_mm = median(size_mm, na.rm = TRUE), 
+            sd_size_mm = sd(size_mm, na.rm = TRUE))
+ggplot(data = siteyear_summary, aes(x = year, y = median_size_mm, color = site)) +
+  geom_line()
+ggsave(here("figures", "lobsters-plot.png"))
+```
+
+
